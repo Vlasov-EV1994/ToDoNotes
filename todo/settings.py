@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'corsheaders',
+    'todoapp',
 ]
 
 AUTH_USER_MODEL = 'users.User'
