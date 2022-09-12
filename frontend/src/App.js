@@ -9,6 +9,7 @@ import Navbar from './components/Menu.js'
 import UserList from './components/User.js'
 import ProjectList from './components/Project.js'
 import ToDoList from './components/Todo.js'
+import LoginForm from './components/Auth.js'
 import axios from 'axios'
 
 
@@ -27,27 +28,76 @@ class App extends React.Component {
             ],
             users: [],
             project: [],
-            todo: []
+            todo: [],
+            auth: {username: '', is_login: false}
         }
     }
 
+    login(username, password) {
+        axios.post(get_url('token/'), {username: username, password: password})
+            .then(response => {
+                const result = response.data
+                const access = result.access
+                const refresh = result.refresh
+                localStorage.setItem('login', username)
+                localStorage.setItem('access', access)
+                localStorage.setItem('refresh', refresh)
+                this.setState({'auth': {username: username, is_login: true}})
+                this.load_data()
+            }).catch(error => {
+            if (error.response.status === 401) {
+                alert('Неверный логин или пароль')
+            } else {
+                console.log(error)
+            }
+        })
+    }
 
-    componentDidMount() {
-        axios.get(get_url('users/'))
+
+    logout() {
+        localStorage.setItem('login', '')
+        localStorage.setItem('access', '')
+        localStorage.setItem('refresh', '')
+        this.setState({'auth': {username: '', is_login: false}})
+    }
+
+    load_data() {
+        let headers = {
+            'Content-Type': 'application/json'
+        }
+        if (this.state.auth.is_login) {
+            const token = localStorage.getItem('access')
+            headers['Authorization'] = 'Bearer ' + token
+        }
+
+        axios.get(get_url('users/'), {headers})
             .then(response => {
                 this.setState({users: response.data})
-            }).catch(error => console.log(error))
+            }).catch(error =>
 
+            console.log(error)
+        )
 
-        axios.get(get_url('project/'))
+        axios.get(get_url('project/'), {headers})
             .then(response => {
-                this.setState({project: response.data.results})
-            }).catch(error => console.log(error))
+                this.setState({project: response.data})
+            }).catch(error =>
+            console.log(error)
+        )
 
-        axios.get(get_url('todo/'))
+        axios.get(get_url('todo/'), {headers})
             .then(response => {
-                this.setState({todo: response.data.results})
-            }).catch(error => console.log(error))
+                this.setState({todo: response.data})
+            }).catch(error =>
+            console.log(error)
+        )
+    }
+
+    componentDidMount() {
+        const username = localStorage.getItem('login')
+        if ((username !== "") & (username !== null)) {
+            this.setState({'auth': {username: username, is_login: true}}, () => this.load_data())
+        }
     }
 
 
@@ -55,9 +105,9 @@ class App extends React.Component {
         return (
             <Router>
                 <header>
-                    <Navbar navbarItems={this.state.navbarItems}/>
+                    <Navbar navbarItems={this.state.navbarItems} auth={this.state.auth} logout={() => this.logout()}/>
                 </header>
-                <main role="main" className="flex-shrink-0">
+                <main role="main" class="flex-shrink-0">
                     <div className="container">
                         <Switch>
                             <Route exact path='/'>
@@ -68,6 +118,9 @@ class App extends React.Component {
                             </Route>
                             <Route exact path='/todo'>
                                 <ToDoList items={this.state.todo}/>
+                            </Route>
+                            <Route exact path='/login'>
+                                <LoginForm login={(username, password) => this.login(username, password)}/>
                             </Route>
                         </Switch>
                     </div>
