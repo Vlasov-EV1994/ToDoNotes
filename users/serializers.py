@@ -1,15 +1,16 @@
-from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
 from .models import User
 
 
-class UserModelSerializer(HyperlinkedModelSerializer):
+class UserModelSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
 
 
-class UserModelSerializerVersionTwo(HyperlinkedModelSerializer):
+class UserModelSerializerVersionTwo(ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'first_name']
+        fields = ['username', 'first_name', 'last_name', 'is_staff']
+
 
