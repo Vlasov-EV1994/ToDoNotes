@@ -8,11 +8,11 @@ from rest_framework import generics
 
 class UserModelViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                        mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    serializer_class = UserModelSerializer
+    #serializer_class = UserModelSerializer
     queryset = User.objects.all()
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    #renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
     def get_serializer_class(self):
         if self.request.version == 'v2':
-            return UserModelSerializer
-        return UserModelSerializerVersionTwo
+            return UserModelSerializerVersionTwo
+        return UserModelSerializer
