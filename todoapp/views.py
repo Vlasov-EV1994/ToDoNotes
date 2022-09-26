@@ -5,6 +5,7 @@ from .models import Project, Todo
 from .serializers import ProjectModelSerializer, TodoModelSerializer
 from .filters import ProjectFilters, TodoFilters
 from django_filters import rest_framework as filters
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 
 class ProjectLimitViewSet(LimitOffsetPagination):
@@ -14,9 +15,10 @@ class ProjectLimitViewSet(LimitOffsetPagination):
 class ProjectCustomDjangoFilterViewSet(ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = ProjectFilters
-    pagination_class = ProjectLimitViewSet
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    #filter_backends = (filters.DjangoFilterBackend,)
+    #filterset_class = ProjectFilters
+    #pagination_class = ProjectLimitViewSet
 
 
 class TodoLimitViewSet(LimitOffsetPagination):
@@ -26,6 +28,7 @@ class TodoLimitViewSet(LimitOffsetPagination):
 class TodoCustomDjangoFilterViewSet(ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TodoModelSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = TodoFilters
-    pagination_class = TodoLimitViewSet
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    #filter_backends = (filters.DjangoFilterBackend,)
+    #filterset_class = TodoFilters
+    #pagination_class = TodoLimitViewSet
