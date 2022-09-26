@@ -22,6 +22,7 @@ const ToDoList = ({items}) => {
                 <th>Create</th>
                 <th>Project</th>
                 <th>Creator</th>
+
             </tr>
             {items.map((item) => <ToDoListItem item={item} />)}
         </table>
