@@ -40,7 +40,7 @@ class ProjectForm extends React.Component {
                             value={this.state.project_addres} onChange={(event)=>this.handleChange(event)} />
                 </div>
                 <label for="login">product users</label>
-                <input type="number" className="form-control" name="project_users"
+                    <input type="number" className="form-control" name="project_users"
                                 value={this.state.project_users} onChange={(event)=>this.handleChange(event)} />
 
 

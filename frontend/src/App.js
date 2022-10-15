@@ -12,6 +12,7 @@ import ToDoList from './components/Todo.js'
 import LoginForm from './components/Auth.js'
 import axios from 'axios'
 import ProjectForm from './components/ProjectForm.js'
+import TodoForm from './components/TodoForm.js'
 
 
 const DOMAIN = 'http://127.0.0.1:8000/api/'
@@ -37,6 +38,17 @@ class App extends React.Component {
     create_project(project_name, project_addres, project_user) {
         const headers = this.get_headers()
         const data = {project_name:project_name, project_addres:project_addres, project_user:project_user}
+        axios.post(get_url(`project/`), data, {headers})
+            .then(response => {this.load_data()
+        }).catch(error => {
+        console.log(error)
+        this.setState({project: []})})
+
+    }
+
+    create_todo(todo_project, todo_txt, todo_create_user) {
+        const headers = this.get_headers()
+        const data = {todo_project:todo_project, todo_txt:todo_txt, todo_create_user:todo_create_user}
         axios.post(get_url(`project/`), data, {headers})
             .then(response => {this.load_data()
         }).catch(error => {
@@ -162,6 +174,7 @@ class App extends React.Component {
                             <Route exact path='/todo'>
                                 <ToDoList items={this.state.todo} delete_todo={(id)=>this.delete_todo(id)}/>
                             </Route>
+                            <Route exact path='/todo/create' component={() => <TodoForm />}/>
                             <Route exact path='/login'>
                                 <LoginForm login={(username, password) => this.login(username, password)}/>
                             </Route>
